@@ -1,0 +1,20 @@
+{
+  "name": "emscripten-cmake",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A template using Emscripten and CMake",
+  "scripts": {
+    "build": "cmake --preset emscripten-debug && cmake --build build/debug",
+    "build:release": "cmake --preset emscripten-release && cmake --build build/release",
+    "serve": "browser-sync start --server dist --port 8080 --no-open --files \"dist/*.html,dist/*.js,dist/*.wasm\" --ignore \"dist/*.tmp*,dist/*.temp*\"",
+    "clean": "rimraf build dist",
+    "rebuild": "npm run clean && npm run build",
+    "watch": "npm run build && concurrently \"npm run serve\" \"nodemon --watch src --ext cpp,h --delay 1 --exec \\\"npm run build\\\" --on-change-only\""
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.4",
+    "concurrently": "^9.2.0",
+    "nodemon": "^3.1.10",
+    "rimraf": "^5.0.5"
+  }
+}

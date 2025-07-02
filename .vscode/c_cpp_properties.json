@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Emscripten",
+            "includePath": [
+                "${workspaceFolder}/src/**",
+                "${env:EMSDK}/upstream/emscripten/cache/sysroot/include/**",
+                "${env:VCPKG_ROOT}/installed/wasm32-emscripten/include/**"
+            ],
+            "defines": [
+                "__EMSCRIPTEN__",
+                "EMSCRIPTEN"
+            ],
+            "compilerPath": "${env:EMSDK}/upstream/emscripten/emcc",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "clang-x64",
+            "compileCommands": "${workspaceFolder}/build/debug/compile_commands.json"
+        }
+    ],
+    "version": 4
+}
