@@ -145,3 +145,14 @@ target_link_libraries(index PRIVATE
 ```
 
 Dependencies will be automatically installed on next build
+
+## Deployment 
+
+### Setting Up Github Pages
+- Go to your repository on GitHub
+- Navigate to Settings → Pages
+- Under "Source", select GitHub Actions
+- GitHub will automatically detect the workflow file
+
+### Push to Main
+The project includes a `.github/workflows/deploy.yml` file that builds and deploys from `/src` whenever a push is made to main.
