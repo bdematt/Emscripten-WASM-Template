@@ -12,8 +12,6 @@ set(COMPILE_WARNING_AS_ERROR ON)
 add_executable(
     index
     src/main.cpp
-    src/Shader.cpp
-    src/Life.cpp
 )
 
 # Create dist directory for web assets
