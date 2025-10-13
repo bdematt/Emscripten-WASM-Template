@@ -32,6 +32,7 @@ target_compile_options(index PRIVATE
 # Emscripten link options
 target_link_options(index PRIVATE
     --use-port=emdawnwebgpu
+    -sASSERTIONS=1                 # Enable runtime assertions
     -sASYNCIFY=1                   # Required for async WebGPU operations
     -sEXPORTED_FUNCTIONS=['_main'] # Export main function
     -sEXPORTED_RUNTIME_METHODS=['ccall','cwrap']
