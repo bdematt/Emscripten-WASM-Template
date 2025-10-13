@@ -20,7 +20,7 @@ file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/dist)
 # Emscripten-specific settings
 set_target_properties(index PROPERTIES
     SUFFIX ".html"
-    LINK_FLAGS "-s WASM=1 -s USE_WEBGPU=1 --shell-file ${CMAKE_SOURCE_DIR}/src/index.html"
+    LINK_FLAGS "-s WASM=1 --shell-file ${CMAKE_SOURCE_DIR}/src/index.html"
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/dist
 )
 
