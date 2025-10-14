@@ -9,41 +9,10 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            background: #000;
-        }
-        
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            display: block;
-        }
-        
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
+        #canvas {
+            max-width: 100%;
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.3) !important;
-            backdrop-filter: blur(1px);
-            -webkit-backdrop-filter: blur(1px);
-            padding: 1rem;
-            text-align: center;
-            z-index: 10;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        h1 {
-            color: #fff;
-            font-size: clamp(1.2rem, 4vw, 2rem);
-            margin: 0;
+            aspect-ratio: 1 / 1;
         }
     </style>
 </head>
@@ -52,7 +21,9 @@
         <h1>🔺 WASM WebGPU Triangle 🔺</h1>
         <a href="https://github.com/bdematt/Emscripten-WASM-Template">View Source</a>
     </header>
-    <canvas id="canvas"></canvas>
+    <main>
+        <canvas id="canvas"></canvas>
+    </main>
     
     <!-- Define Module BEFORE Emscripten script --> 
     <script>
