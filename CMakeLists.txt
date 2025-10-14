@@ -12,6 +12,7 @@ set(COMPILE_WARNING_AS_ERROR ON)
 add_executable(
     index
     src/main.cpp
+    src/ShaderLoader.cpp
 )
 
 # Create dist directory for web assets
