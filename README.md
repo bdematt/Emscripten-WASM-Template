@@ -1,6 +1,6 @@
-# Emscripten CMake WebGL Project
+# Emscripten CMake WebGPU Project
 
-A C++ WebGL application using Emscripten, CMake, GLFW, and GLM with a modern Node.js development workflow.
+A C++ WebGPU application using Emscripten, CMake, GLFW, and GLM with a modern Node.js development workflow.
 
 ## Prerequisites
 

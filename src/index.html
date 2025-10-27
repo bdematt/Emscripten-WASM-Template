@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <title>🔺 WASM WebGPU Triangle 🔺</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #canvas {
+            max-width: 100%;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🔺 WASM WebGPU Triangle 🔺</h1>
+        <a href="https://github.com/bdematt/Emscripten-WASM-Template">View Source</a>
+    </header>
+    <main>
+        <canvas id="canvas"></canvas>
+    </main>
+    
+    <!-- Define Module BEFORE Emscripten script --> 
+    <script>
+        const canvas = document.getElementById('canvas');
+
+        // Set canvas to exact window dimensions
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Notify C++ about the resize if the module is loaded
+            if (Module && Module._handleResize) {
+                Module._handleResize();
+            }
+        }
+        
+        // Set initial size
+        resizeCanvas();
+
+        // Handle window resize
+        window.addEventListener('resize', resizeCanvas);
+        
+        const wasmSupported = typeof WebAssembly === "object" && typeof WebAssembly.instantiate === "function"
+        const webGpuSupported = !!navigator.gpu;
+        if (!wasmSupported || !webGpuSupported) {
+            window.alert("WebAssembly or WebGPU not supported. Please try a different browser.");
+            throw new Error("WebAssembly or WebGPU not supported");
+        }
+        
+        var Module = {
+            canvas,  // Pass the canvas to Emscripten
+            onRuntimeInitialized: () => {
+                console.log('Runtime Initialized!');
+            }
+        };
+    </script>
+    
+    <!-- Emscripten will inject its script here -->
+    {{{ SCRIPT }}}
+</body>
+</html>
