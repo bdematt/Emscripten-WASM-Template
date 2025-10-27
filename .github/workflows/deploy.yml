@@ -3,8 +3,6 @@ name: Build and Deploy WASM Demo
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 # Allow GitHub Actions to deploy to Pages
