@@ -133,3 +133,12 @@ int main() {
     emscripten_set_main_loop(mainLoop, 0, true);
     return 0;
 }
+
+// Exposted resize handler function
+extern "C" {
+    EMSCRIPTEN_KEEPALIVE
+    void handleResize() {
+        setCanvasDimensions();
+        configureSurface();
+    }
+}

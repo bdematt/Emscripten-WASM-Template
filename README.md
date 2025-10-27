@@ -1,6 +1,6 @@
 # Emscripten CMake WebGPU Project
 
-A C++ WebGPU application using Emscripten, CMake, GLFW, and GLM with a modern Node.js development workflow.
+A C++ WebGPU application using Emscripten and CMake with a Node.js development workflow.
 
 ## Prerequisites
 
@@ -67,92 +67,111 @@ npm install
 ```
 ├── .vscode/
 │   ├── c_cpp_properties.json   # VSCode C++ configurations
-├── src/                        # C++ source files -- There will be linter errors before building for first time
-│   ├── main.cpp           
-│   ├── triangle.cpp       
-│   ├── triangle.h
-│   ├── shader.cpp         
-│   └── shader.h
+│   └── extensions.json         # Recommended VSCode extensions
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # GitHub Actions deployment workflow
+├── src/                        # C++ source files
+│   ├── main.cpp                # Application entry point
+│   ├── ShaderLoader.cpp        # Shader loading utility
+│   ├── ShaderLoader.h
+│   ├── index.html              # HTML shell for WASM
+│   └── shaders/
+│       └── shader.wgsl         # WebGPU shader
 ├── build/                      # CMake build artifacts (auto-generated, git ignored)
 ├── dist/                       # Web output files (auto-generated, git ignored)
 ├── CMakeLists.txt              # CMake configuration
 ├── CMakePresets.json           # CMake presets for Emscripten
-└── package.json                # Node.js dependencies and scripts
+├── package.json                # Node.js dependencies and scripts
 └── vcpkg.json                  # C++ dependencies (auto-installed)
 ```
 
 ## NPM Scripts
 
-### Development Server
+### Development
 ```bash
-# Start development server with auto-reload
+# Build debug version and start development server with auto-reload
 npm run watch
-```
-
-### Manual Serving
-```bash
-# Just serve the built files (without watching)
-npm run serve
-```
-
-### Release Build
-```bash
-# Build for release instead of debug
-npm run build:release
 ```
 
 ## Development
 
 ### Creating Additional Source Files
-Create C++ files in `/src` and update `CMakeLists.txt`
+1. Create C++ files in `/src`
+2. Update `CMakeLists.txt` to include them:
+
 ```cmake
 add_executable(
     index
     src/main.cpp
-    src/shader.cpp
-    src/triangle.cpp
-    src/myFile.cpp # Add your file here
+    src/ShaderLoader.cpp
+    src/myNewFile.cpp  # Add your file here
 )
 ```
 
-### Adding Additional C++ Dependencies
-Add dependencies to `vcpkg.json`
+### Adding C++ Dependencies via vcpkg
+
+This template uses vcpkg for C++ dependency management. Here's how to add libraries:
+
+1. **Add to vcpkg.json:**
 ```json
 {
   "name": "your-project",
   "version": "1.0.0",
   "dependencies": [
-    "glfw3",
-    "glm",
-    "fmt" // Add your dependency here
+    "glfw3",      // For example
   ]
 }
 ```
 
-Update `find_package()` and `target_link_libraries()` in `CMakeLists.txt`
+2. **Update CMakeLists.txt:**
 ```cmake
 # Find packages installed by vcpkg
 find_package(glfw3 CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED) # Add dependency here
 
-# Link libraries
+# Link libraries to your executable
 target_link_libraries(index PRIVATE 
-    glfw 
-    glm::glm
-    fmt::fmt # And here
+    glfw
 )
 ```
 
-Dependencies will be automatically installed on next build
+### Adding Shader Files
+
+Shader files in `src/shaders/` are automatically embedded into the WASM binary and accessible at runtime via `/shaders/` path:
+
+```cpp
+// Load shader from embedded file
+wgpu::ShaderModule shader = ShaderLoader::fromFile(device, "/shaders/myShader.wgsl");
+```
+
+To add more shader directories, update the `--embed-file` flag in `CMakeLists.txt`:
+```cmake
+target_link_options(index PRIVATE
+    --embed-file ${CMAKE_SOURCE_DIR}/src/shaders@/shaders
+    --embed-file ${CMAKE_SOURCE_DIR}/src/other-assets@/assets  # Add more here
+)
+```
 
 ## Deployment 
 
-### Setting Up Github Pages
-- Go to your repository on GitHub
-- Navigate to Settings → Pages
-- Under "Source", select GitHub Actions
-- GitHub will automatically detect the workflow file
+### Setting Up GitHub Pages
+1. Go to your repository on GitHub
+2. Navigate to Settings → Pages
+3. Under "Source", select GitHub Actions
+4. GitHub will automatically detect the workflow file
 
 ### Push to Main
-The project includes a `.github/workflows/deploy.yml` file that builds and deploys from `/src` whenever a push is made to main.
+The project includes a `.github/workflows/deploy.yml` file that:
+- Builds the release version
+- Deploys to GitHub Pages
+- Triggers automatically on pushes to `main`
+
+Your app will be available at: `https://yourusername.github.io/your-repo-name/`
+
+## Troubleshooting
+
+### Build fails with "EMSDK not found"
+Make sure you've run `source ./emsdk_env.sh` (or `.bat` on Windows) in your current terminal session.
+
+### Build fails with "VCPKG_ROOT not set"
+Ensure the `VCPKG_ROOT` environment variable points to your vcpkg installation directory.

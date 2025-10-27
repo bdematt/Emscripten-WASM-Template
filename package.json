@@ -1,5 +1,5 @@
 {
-  "name": "emscripten-cmake",
+  "name": "emscripten-webgpu-project",
   "version": "1.0.0",
   "private": true,
   "description": "A template using Emscripten and CMake",
