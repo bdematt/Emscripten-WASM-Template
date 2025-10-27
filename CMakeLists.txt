@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(COMPILE_WARNING_AS_ERROR ON)
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 # Your executable
 add_executable(
@@ -33,13 +33,26 @@ target_compile_options(index PRIVATE
 # Emscripten link options
 target_link_options(index PRIVATE
     --use-port=emdawnwebgpu
-    -sASSERTIONS=1                 # Enable runtime assertions
-    -sASYNCIFY=1                   # Required for async WebGPU operations
-    -sEXPORTED_FUNCTIONS=['_main'] # Export main function
+    -sASSERTIONS=1
+    -sASYNCIFY=1
+    -sEXPORTED_FUNCTIONS=['_main','_handleResize']  # Export the resize handler
     -sEXPORTED_RUNTIME_METHODS=['ccall','cwrap']
-    -sALLOW_MEMORY_GROWTH=1        # Allow memory growth
-    -sINITIAL_MEMORY=67108864      # 64MB initial memory
-    -sMAXIMUM_MEMORY=134217728     # 128MB max memory
-    -O2                            # Optimize for performance
+    -sALLOW_MEMORY_GROWTH=1
+    -sINITIAL_MEMORY=67108864
+    -sMAXIMUM_MEMORY=134217728
     --embed-file ${CMAKE_SOURCE_DIR}/src/shaders@/shaders
 )
+
+# Add optimization flags based on build type
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_link_options(index PRIVATE
+        -O3                         # Max optimization for release
+        --closure 1                 # Enable Closure Compiler
+    )
+else()
+    target_link_options(index PRIVATE
+        -O0                         # No optimization for debug
+        -g                          # Include debug symbols
+        -sASSERTIONS=2              # More verbose assertions in debug
+    )
+endif()
